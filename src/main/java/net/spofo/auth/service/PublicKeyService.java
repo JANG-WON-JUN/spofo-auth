@@ -25,6 +25,13 @@ public class PublicKeyService {
     private final MemberService memberService;
     private final PublicKeyRepository publicKeyRepository;
     private final RestClient restClient;
+
+    /*
+        참고.
+        지금은 카카오 1개 뿐이지만, 만약 네이버와 구글 로그인이 추가된다면?
+        따라서 카카오의 URL, 네이버의 URL, 구글의 URL을 따로 관리해야 할 수 있습니다.
+        그러한 경우 enum으로 관리할 수 있으므로 생각해보시면 좋을 것 같아요
+     */
     private final String issuer = "https://kauth.kakao.com";
     private final String KAKAO_PUBLIC_KEY_URL = "https://kauth.kakao.com/.well-known/jwks.json";
 
