@@ -16,6 +16,9 @@ public class MemberService {
 
     public MemberResponse findBySocialId(String socialId) {
         Member member = memberRepository.findBySocialId(socialId)
+                // 참고
+                // 만약 다른 곳에서도 SocialIdNotFound를 사용한다면 같은 에러 메세지를 2번 작성해야 합니다.
+                // SocialIdNotFound의 에러 메세지를 공통으로 처리할 수 있는 방법을 생각해보면 좋을 것 같아요~
                 .orElseThrow(() -> new SocialIdNotFound("id를 찾을 수 없습니다."));
 
         return MemberResponse.from(member);
