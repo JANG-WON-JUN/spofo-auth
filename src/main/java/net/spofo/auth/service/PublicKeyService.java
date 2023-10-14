@@ -65,11 +65,23 @@ public class PublicKeyService {
         return false;
     }
 
+    /*
+        참고
+        token 매개변수가 사용되지 않는데 참고 부탁드려요.
+     */
     private void getKakaoPublicKeys(String token) {
         // 카카오 공개키 목록 가져오기
         ResponseEntity response = restClient.get()
                 .uri(KAKAO_PUBLIC_KEY_URL)
                 .retrieve()
+                /*
+                    참고
+                    RestClient의 결과값을 받을 때 정형화된 값이라면
+                    String으로 받고 JSONObject를 사용해 직접 파싱하는 것이 아닌
+                    바로 자바 클래스에 매핑 해줄 수 있습니다.
+
+                    ex) toEntity(MyClass.class);
+                 */
                 .toEntity(String.class);
 
         String kidJson = response.getBody().toString();
@@ -90,8 +102,9 @@ public class PublicKeyService {
         } catch (Exception e) { //JSONExecption
             throw new InvalidToken("잘못된 JSON 입니다.");
         }
-        if (!matchPublicKey(publicKeyList,
-                storedPublicKeyList)) { // 만약 불러온 pk와 저장된 pk가 다르다면 공개키가 업데이트 된 것이므로 DB 업데이트
+
+        // 만약 불러온 pk와 저장된 pk가 다르다면 공개키가 업데이트 된 것이므로 DB 업데이트
+        if (!matchPublicKey(publicKeyList, storedPublicKeyList)) {
             saveNewPublicKey(publicKeyList);
         }
     }
