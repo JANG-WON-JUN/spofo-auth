@@ -3,9 +3,9 @@ package net.spofo.auth.controller;
 import static org.springframework.http.ResponseEntity.ok;
 
 import lombok.RequiredArgsConstructor;
-import net.spofo.auth.dto.response.MemberResponse;
 import net.spofo.auth.dto.request.AddMemberRequest;
-import net.spofo.auth.exception.NoSocialIdException;
+import net.spofo.auth.dto.response.MemberResponse;
+import net.spofo.auth.exception.SocialIdNotFound;
 import net.spofo.auth.service.MemberService;
 import net.spofo.auth.service.PublicKeyService;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class MemberController {
     public ResponseEntity<MemberResponse> insertMember(@RequestBody AddMemberRequest request) {
         try {
             memberService.findBySocialId(request.getSocialId());
-        } catch (NoSocialIdException e) {
+        } catch (SocialIdNotFound e) {
             MemberResponse savedMember = memberService.save(request);
             return ok().body(savedMember);
         }

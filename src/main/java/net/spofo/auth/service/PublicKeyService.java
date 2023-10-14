@@ -7,15 +7,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import net.spofo.auth.dto.response.MemberResponse;
 import net.spofo.auth.entity.PublicKey;
-import net.spofo.auth.exception.InvalidTokenException;
+import net.spofo.auth.exception.InvalidToken;
 import net.spofo.auth.repository.PublicKeyRepository;
 import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.json.JSONObject;
 import org.springframework.web.client.RestClient;
 
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class PublicKeyService {
         if (verifySignature(jwtOrigin) == false) { // 토큰의 공개키가 유효하지 않다면 DB를 업데이트하거나 실패라고 알려주거나
             getKakaoPublicKeys(token); // 예외 발생 없이 잘 돌아오면 정상적인 토큰. (db가 업데이트 된 상태이므로 한 번 더 서명 검증 필요)
             if (verifySignature(jwtOrigin) == false) {
-                throw new InvalidTokenException("유효하지 않은 토큰(공개키 불일치)");
+                throw new InvalidToken("유효하지 않은 토큰(공개키 불일치)");
             }
         }
         // 토큰 검증 완료!
@@ -81,9 +81,10 @@ public class PublicKeyService {
                 publicKeyList.add(kid);
             }
         } catch (Exception e) { //JSONExecption
-            throw new InvalidTokenException("잘못된 JSON 입니다.");
+            throw new InvalidToken("잘못된 JSON 입니다.");
         }
-        if (!matchPublicKey(publicKeyList, storedPublicKeyList)) { // 만약 불러온 pk와 저장된 pk가 다르다면 공개키가 업데이트 된 것이므로 DB 업데이트
+        if (!matchPublicKey(publicKeyList,
+                storedPublicKeyList)) { // 만약 불러온 pk와 저장된 pk가 다르다면 공개키가 업데이트 된 것이므로 DB 업데이트
             saveNewPublicKey(publicKeyList);
         }
     }
@@ -92,7 +93,7 @@ public class PublicKeyService {
         for (int i = 0; i < publicKeyList.size(); i++) {
             for (int j = 0; j < storedPublicKeyList.size(); j++) {
                 if (publicKeyList.get(i).equals(storedPublicKeyList.get(j).getPublickey())) {
-                    throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+                    throw new InvalidToken("유효하지 않은 토큰입니다.");
                 }
             }
         }
@@ -114,7 +115,8 @@ public class PublicKeyService {
                 .filter(jwt -> jwt.getAudience().get(0).equals(appKey))
                 .filter(jwt -> !jwt.getExpiresAt().before(new Date()));
 
-        return validationResult.orElseThrow(() -> new InvalidTokenException("토큰이 유효하지 않습니다."));
+        return validationResult.orElseThrow(
+                () -> new InvalidToken("토큰이 유효하지 않습니다."));
     }
 
     public PublicKey savePublicKey(PublicKey publicKey) {
