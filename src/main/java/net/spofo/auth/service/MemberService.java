@@ -9,13 +9,12 @@ import net.spofo.auth.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    private RestClient restClient = RestClient.builder().build();
+    private final RestClient restClient;
 
     public String getStock() {
         return restClient.get()
