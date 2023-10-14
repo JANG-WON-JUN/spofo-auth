@@ -133,6 +133,10 @@ public class PublicKeyService {
         return publicKeyRepository.save(publicKey);
     }
 
+    // 참고
+    // deleteAllPublicKey, loadPublicKey는 왜 별도의 메서드로 작성하셨나요?
+    // 1줄의 코드를 별도의 메서드로 작성하는 경우의 이점을 생각해보시고
+    // 코드를 인라인 해도 무방하면 아래 2개의 메서드는 빼도 좋을 것 같아요
     private void deleteAllPublicKey() {
         publicKeyRepository.deleteAllInBatch();
     }
