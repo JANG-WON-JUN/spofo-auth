@@ -103,7 +103,10 @@ public class PublicKeyService {
     public void saveNewPublicKey(List<String> publicKeyList) {
         deleteAllPublicKey();
         publicKeyList.stream()
-                .map(PublicKey::new) // 각 요소를 PublicKey 객체로 변환
+                // 참고
+                // 정적 팩터리 메서드를 사용하도록 하면 좋습니다! (아래 링크 참고)
+                // https://github.com/TaemHam/effective-java-study/tree/main/2%EC%9E%A5/%EC%95%84%EC%9D%B4%ED%85%9C01
+                .map(PublicKey::from) // 각 요소를 PublicKey 객체로 변환
                 .forEach(this::savePublicKey); // 각 PublicKey를 저장
     }
 

@@ -35,4 +35,11 @@ public class PublicKey {
         this.publickey = publickey;
     }
 
+    public static PublicKey from(String publickey) {
+        return PublicKey.builder()
+                .publickey(publickey)
+                .build();
+    }
+
+
 }
