@@ -54,7 +54,7 @@ public class PublicKeyService {
         return memberResponse;
     }
 
-    public boolean verifySignature(DecodedJWT jwtOrigin) { // 토큰의 공개키와 비교하여 서명 검증
+    private boolean verifySignature(DecodedJWT jwtOrigin) { // 토큰의 공개키와 비교하여 서명 검증
         List<PublicKey> storedPublicKey = loadPublicKey();
 
         for (int i = 0; i < storedPublicKey.size(); i++) {
@@ -65,7 +65,7 @@ public class PublicKeyService {
         return false;
     }
 
-    public void getKakaoPublicKeys(String token) {
+    private void getKakaoPublicKeys(String token) {
         // 카카오 공개키 목록 가져오기
         ResponseEntity response = restClient.get()
                 .uri(KAKAO_PUBLIC_KEY_URL)
@@ -96,7 +96,8 @@ public class PublicKeyService {
         }
     }
 
-    public boolean matchPublicKey(List<String> publicKeyList, List<PublicKey> storedPublicKeyList) {
+    private boolean matchPublicKey(List<String> publicKeyList,
+            List<PublicKey> storedPublicKeyList) {
         for (int i = 0; i < publicKeyList.size(); i++) {
             for (int j = 0; j < storedPublicKeyList.size(); j++) {
                 if (publicKeyList.get(i).equals(storedPublicKeyList.get(j).getPublickey())) {
@@ -107,7 +108,7 @@ public class PublicKeyService {
         return false;
     }
 
-    public void saveNewPublicKey(List<String> publicKeyList) {
+    private void saveNewPublicKey(List<String> publicKeyList) {
         deleteAllPublicKey();
         publicKeyList.stream()
                 // 참고
@@ -117,7 +118,7 @@ public class PublicKeyService {
                 .forEach(this::savePublicKey); // 각 PublicKey를 저장
     }
 
-    public DecodedJWT verifyValidation(String token) {
+    private DecodedJWT verifyValidation(String token) {
         DecodedJWT jwtOrigin = JWT.decode(token);
 
         Optional<DecodedJWT> validationResult = Optional.of(jwtOrigin)
@@ -125,19 +126,18 @@ public class PublicKeyService {
                 .filter(jwt -> jwt.getAudience().get(0).equals(appKey))
                 .filter(jwt -> !jwt.getExpiresAt().before(new Date()));
 
-        return validationResult.orElseThrow(
-                () -> new InvalidToken("토큰이 유효하지 않습니다."));
+        return validationResult.orElseThrow(() -> new InvalidToken("토큰이 유효하지 않습니다."));
     }
 
-    public PublicKey savePublicKey(PublicKey publicKey) {
+    private PublicKey savePublicKey(PublicKey publicKey) {
         return publicKeyRepository.save(publicKey);
     }
 
-    public void deleteAllPublicKey() {
+    private void deleteAllPublicKey() {
         publicKeyRepository.deleteAllInBatch();
     }
 
-    public List<PublicKey> loadPublicKey() {
+    private List<PublicKey> loadPublicKey() {
         return publicKeyRepository.findAll();
     }
 }
