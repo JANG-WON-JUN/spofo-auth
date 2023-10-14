@@ -1,4 +1,4 @@
-package net.spofo.auth.exception.controller;
+package net.spofo.auth.exception.advice;
 
 import static org.springframework.http.ResponseEntity.status;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
     @Controller와 @RestController과 같은 구조입니다.
  */
 @RestControllerAdvice
-public class ExceptionController {
+public class ExControllerAdvice {
 
     /*
         참고.

@@ -1,6 +1,6 @@
 package net.spofo.auth.exception;
 
-import net.spofo.auth.exception.controller.ExceptionController;
+import net.spofo.auth.exception.advice.ExControllerAdvice;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  * 그러면 ExceptionHandler에서 AuthServerException으로 공통에러 처리를 할 수 있으며
  * 추가적으로 상세한 예외 처리를 하고 싶다면 Exception Advice에 추가하면 됩니다.
  *
- * @see ExceptionController
+ * @see ExControllerAdvice
  */
 public abstract class AuthServerException extends RuntimeException {
 
