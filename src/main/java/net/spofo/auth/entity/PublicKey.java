@@ -14,6 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+/*
+    참고
+    @Table 어노테이션은 엔티티와 매핑되는 db table의 테이블명을 지정해주는데
+    기본값은 엔티티의 클래스명과 동일합니다.
+    따라서 이 경우에는 @Table 어노테이션을 붙여주지 않아도 됩니다.
+ */
 @Table(name = "publickey")
 public class PublicKey {
 
@@ -25,7 +31,7 @@ public class PublicKey {
     private String publickey;
 
     @Builder
-    public PublicKey(String publickey) {
+    private PublicKey(String publickey) {
         this.publickey = publickey;
     }
 

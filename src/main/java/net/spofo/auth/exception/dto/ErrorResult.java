@@ -11,7 +11,7 @@ public class ErrorResult {
     private final String errorMessage;
 
     @Builder
-    public ErrorResult(HttpStatus errorCode, String errorMessage) {
+    private ErrorResult(HttpStatus errorCode, String errorMessage) {
         this.errorCode = String.valueOf(errorCode.value());
         this.errorMessage = errorMessage;
     }
